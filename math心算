@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>減法心算</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        #result {
+            color: red;
+            margin-top: 20px;
+        }
+        #timer {
+            font-size: 24px;
+            margin-top: 20px;
+            color: green;
+        }
+        #mathSection {
+            display: none; /* 初始時隱藏數學區域 */
+        }
+    </style>
+</head>
+<body>
+    <h1>減法心算 - 每次減13</h1>
+    <p>從1023依次遞減13。若回答錯誤，將重重新開始。速度越快越好</p>
+
+    <!-- 開始按鈕 -->
+    <button id="startButton" onclick="startGame()">開始</button>
+
+    <!-- 心算區域 -->
+    <div id="mathSection">
+        <label for="userAnswer">請輸入你的答案：</label>
+        <input type="number" id="userAnswer">
+        <button onclick="checkAnswer()">提交</button>
+
+        <p id="currentValue">目前數字: 1023</p>
+        <p id="result"></p>
+        <p id="timer">倒數計時: 180 秒</p>
+    </div>
+
+    <script>
+        let currentNumber = 1023;
+        let timeLeft = 180;  // 設定倒數時間為 180 秒
+        let timerInterval;
+
+        // 啟動遊戲，顯示心算區域並開始計時
+        function startGame() {
+            document.getElementById("mathSection").style.display = "block";  // 顯示心算區域
+            document.getElementById("startButton").style.display = "none";  // 隱藏開始按鈕
+            startTimer();  // 開始倒數計時
+        }
+
+        // 啟動計時器
+        function startTimer() {
+            timerInterval = setInterval(function() {
+                timeLeft--;
+                document.getElementById("timer").textContent = "倒數計時: " + timeLeft + " 秒";
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    resetGame();
+                    document.getElementById("result").textContent = "時間到！已重置回 1023。";
+                }
+            }, 1000); // 每秒更新一次
+        }
+
+        // 重置遊戲
+        function resetGame() {
+            currentNumber = 1023;
+            timeLeft = 180;  // 重置時間
+            document.getElementById("currentValue").textContent = "目前數字: " + currentNumber;
+            document.getElementById("timer").textContent = "倒數計時: 180 秒";
+        }
+
+        // 檢查答案
+        function checkAnswer() {
+            let userAnswer = parseInt(document.getElementById("userAnswer").value);
+            let expectedAnswer = currentNumber - 13;
+
+            if (userAnswer === expectedAnswer) {
+                currentNumber = expectedAnswer;
+                document.getElementById("currentValue").textContent = "目前數字: " + currentNumber;
+                document.getElementById("result").textContent = "";
+            } else {
+                resetGame();  // 答錯後重置遊戲
+                document.getElementById("result").textContent = "錯誤! 已重置回 1023.";
+            }
+            
+            // 清空輸入框
+            document.getElementById("userAnswer").value = '';
+        }
+    </script>
+</body>
+</html>
